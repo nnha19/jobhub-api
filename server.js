@@ -7,7 +7,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tz76r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB with the user: " + process.env.DB_USER);
   })
   .catch((err) => {
     console.log(err);
@@ -15,6 +15,6 @@ mongoose
 
 const app = express();
 
-app.listen(3000, () => {
+app.listen(3000, (result) => {
   console.log("Server is running on port 3000");
 });
