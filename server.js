@@ -2,13 +2,15 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const userRoutes = require("./routes/userRoutes");
 const validate = require("./middleware/validator");
+const userRoutes = require("./routes/userRoutes");
+const jobRoutes = require("./routes/jobRoute");
 
 const app = express();
 
 app.use(express.json());
 app.use("/users", userRoutes);
+app.use("/jobs", jobRoutes);
 
 mongoose
   .connect(
