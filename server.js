@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-const validate = require("./middleware/validator");
 const userRoutes = require("./routes/userRoutes");
 const jobRoutes = require("./routes/jobRoute");
 
