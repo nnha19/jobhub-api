@@ -7,7 +7,7 @@ mongoose
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.tz76r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then(() => {
-    console.log("Connected to MongoDB with the user: " + process.env.DB_USER);
+    console.log("Connected to MongoDB");
   })
   .catch((err) => {
     console.log(err);
