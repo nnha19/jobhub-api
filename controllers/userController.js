@@ -2,8 +2,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+const validate = (method) => {
+  switch (method) {
+    case "createUser": {
+      return [
+        body("username", "userName doesn't exists").exists(),
+        body("email", "Invalid email").exists().isEmail(),
+      ];
+    }
+  }
+};
+
 const registerUser = async (req, res) => {
-  const { email, ...rest } = req.body;
+  const { email, password, username, isRecruiter } = req.body;
 
   const existingUser = await User.findOne({ email });
 
@@ -11,12 +22,14 @@ const registerUser = async (req, res) => {
     return res.status(400).json({ error: "User already exists" });
   }
 
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
     ...rest,
     password: hashedPassword,
     email,
+    username,
+    isRecruiter,
   });
 
   const token = await jwt.sign({ user }, "MY_SECRET", {
@@ -57,4 +70,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUser, loginUser, validate };
