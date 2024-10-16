@@ -18,8 +18,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  isRecruiter: {
-    type: Boolean,
+  userType: {
+    type: String,
+    enum: ["recruiter", "candidate"],
     default: false,
   },
 });
