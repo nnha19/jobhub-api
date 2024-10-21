@@ -21,29 +21,11 @@ const salaryValidation = body("salary")
     return true;
   });
 
-const locationValidation = [
-  body("location")
-    .exists()
-    .withMessage("Location is required")
-    .isObject()
-    .withMessage("Location must be an object"),
-
-  body("location.city")
-    .exists()
-    .withMessage("City is required")
-    .isString()
-    .withMessage("City must be a string"),
-
-  body("location.country")
-    .exists()
-    .withMessage("Country is required")
-    .isString()
-    .withMessage("Country must be a string"),
-
-  body("location.address")
-    .optional() // Makes address optional
-    .isString()
-    .withMessage("Address must be a string"),
+const companyValidation = [
+  body("company").exists(),
+  body("company.name").exists().isString(),
+  body("company.address").exists().isString(),
+  body("company.logo").optional().isString(),
 ];
 
 const jobValidator = [
@@ -54,8 +36,8 @@ const jobValidator = [
       .exists()
       .isString()
       .isIn(["remote", "on-site", "hybrid"]),
-    ...locationValidation,
     salaryValidation,
+    ...companyValidation,
   ],
   validate,
 ];

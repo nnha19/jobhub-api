@@ -1,5 +1,6 @@
 const isRecruiter = (req, res, next) => {
-  if (!req.user.isRecruiter) {
+  console.log(req.user);
+  if (req.user.userType !== "recruiter") {
     return res
       .status(403)
       .json({ error: "Only recruiters can perform this action" });

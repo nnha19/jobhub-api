@@ -11,12 +11,11 @@ const salarySchema = new mongoose.Schema({
   },
 });
 
-const locationSchema = new mongoose.Schema({
-  city: {
+const companySchema = new mongoose.Schema({
+  logo: {
     type: String,
-    required: true,
   },
-  country: {
+  name: {
     type: String,
     required: true,
   },
@@ -47,7 +46,7 @@ const jobSchema = new mongoose.Schema({
   salary: {
     type: salarySchema,
   },
-  location: locationSchema,
+  company: { type: companySchema, required: true },
   postedDate: {
     type: Date,
     default: Date.now,
@@ -67,24 +66,3 @@ const jobSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Job", jobSchema);
-
-const DUMMY_JOB = {
-  title: "Software Engineer",
-  jobType: "remote",
-  recruiter: "60a3f5f4e5b2b3f5b8b3f5b8",
-  description: "Develop software applications",
-  salary: {
-    min: 3000,
-    max: 5000,
-  },
-  location: {
-    city: "Singapore",
-    country: "Singapore",
-  },
-  skillsRequired: ["Node.js", "React"],
-  queries: [
-    "What is your experience with Node.js?",
-    "What is your experience with React?",
-  ],
-  requiredSkills: ["Node.js", "React", "Express.js"],
-};
