@@ -3,11 +3,9 @@ const mongoose = require("mongoose");
 const salarySchema = new mongoose.Schema({
   min: {
     type: Number,
-    required: true,
   },
   max: {
     type: Number,
-    required: true,
   },
 });
 
@@ -32,6 +30,11 @@ const jobSchema = new mongoose.Schema({
   jobType: {
     type: String,
     enum: ["remote", "on-site", "hybrid"],
+    required: true,
+  },
+  employmentType: {
+    type: String,
+    enum: ["full-time", "part-time", "internship", "contract", "freelance"],
     required: true,
   },
   recruiter: {

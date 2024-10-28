@@ -2,6 +2,7 @@ const Job = require("../models/Job");
 
 const listJobs = async (req, res) => {
   try {
+    const { query } = req.query;
     const jobs = await Job.find();
     return res.status(200).json(jobs);
   } catch (err) {
