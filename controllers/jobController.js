@@ -2,8 +2,24 @@ const Job = require("../models/Job");
 
 const listJobs = async (req, res) => {
   try {
-    const { query } = req.query;
-    const jobs = await Job.find();
+    const jobFilters = {
+      jobType: req.query.jobType,
+      employmentType: req.query.employmentType,
+      postedDate: req.query.datePosted,
+      query: req.query.query,
+    };
+
+    const searchCriteria = {};
+
+    if (jobFilters.jobType) searchCriteria.jobType = jobFilters.jobType;
+    if (jobFilters.employmentType)
+      searchCriteria.employmentType = jobFilters.employmentType;
+    if (jobFilters.postedDate)
+      searchCriteria.postedDate = { $gte: new Date(jobFilters.postedDate) };
+    if (jobFilters.query)
+      searchCriteria.title = { $regex: jobFilters.query, $options: "i" };
+
+    const jobs = await Job.find(searchCriteria).sort({ postedDate: -1 });
     return res.status(200).json(jobs);
   } catch (err) {
     console.log(err);
