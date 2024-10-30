@@ -19,8 +19,24 @@ const listJobs = async (req, res) => {
     if (jobFilters.query)
       searchCriteria.title = { $regex: jobFilters.query, $options: "i" };
 
-    const jobs = await Job.find(searchCriteria).sort({ postedDate: -1 });
-    return res.status(200).json(jobs);
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const startIndex = (page - 1) * limit;
+    const count = await Job.countDocuments(searchCriteria);
+
+    const filteredJobs = await Job.find(searchCriteria)
+      .sort({ postedDate: -1 })
+      .skip(startIndex)
+      .limit(limit);
+
+    return res.status(200).json({
+      page,
+      limit,
+      count,
+      totalPages: Math.ceil(count / limit),
+      results: filteredJobs,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).send("An error occured");
@@ -41,7 +57,23 @@ const createNewJob = async (req, res) => {
   }
 };
 
+const retrieveJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.jobId);
+
+    if (!job) {
+      return res.status(404).send("Job not found");
+    }
+
+    return res.status(200).json(job);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("An error occured");
+  }
+};
+
 module.exports = {
   createNewJob,
   listJobs,
+  retrieveJob,
 };

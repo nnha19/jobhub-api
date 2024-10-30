@@ -8,6 +8,7 @@ const router = express.Router();
 router.use(isAuthenticated);
 
 router.get("", jobController.listJobs);
+router.get("/:jobId", jobController.retrieveJob);
 router.post("", isRecruiter, jobValidator, jobController.createNewJob);
 
 module.exports = router;
