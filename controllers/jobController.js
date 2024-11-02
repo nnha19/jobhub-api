@@ -1,4 +1,5 @@
 const Job = require("../models/Job");
+const JobApplication = require("../models/JobApplication");
 
 const listJobs = async (req, res) => {
   try {
@@ -60,12 +61,19 @@ const createNewJob = async (req, res) => {
 const retrieveJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.jobId);
+    const currentUserApplication = await JobApplication.findOne({
+      jobId: req.params.jobId,
+      applicantId: req.user._id,
+    }).select("_id");
 
     if (!job) {
       return res.status(404).send("Job not found");
     }
 
-    return res.status(200).json(job);
+    return res.status(200).json({
+      ...job.toObject(),
+      currentUserApplication: currentUserApplication._id,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).send("An error occured");
