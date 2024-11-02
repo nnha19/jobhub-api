@@ -21,6 +21,10 @@ const jobApplicationCustomDetailsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
 });
 
 const jobApplicationSchema = new mongoose.Schema({

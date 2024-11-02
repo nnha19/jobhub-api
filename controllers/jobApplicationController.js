@@ -1,3 +1,6 @@
+const Job = require("../models/Job");
+const jobEmail = require("../services/emailServices/jobEmails");
+
 const JobApplication = require("../models/JobApplication");
 
 const createJobApplication = async (req, res) => {
@@ -8,6 +11,13 @@ const createJobApplication = async (req, res) => {
       jobId,
       applicantId: req.user._id,
     });
+
+    const job = await Job.findOne({
+      _id: jobId,
+    });
+
+    // Send email to recruiter about new job application
+    jobEmail.sendNewJobApplicationEmailToRecruiter(jobId, jobApplication);
 
     return res.status(201).json(jobApplication);
   } catch (err) {

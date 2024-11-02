@@ -72,7 +72,9 @@ const retrieveJob = async (req, res) => {
 
     return res.status(200).json({
       ...job.toObject(),
-      currentUserApplication: currentUserApplication._id,
+      currentUserApplication: currentUserApplication
+        ? currentUserApplication._id
+        : null,
     });
   } catch (err) {
     console.log(err);
