@@ -12,10 +12,6 @@ const createJobApplication = async (req, res) => {
       applicantId: req.user._id,
     });
 
-    const job = await Job.findOne({
-      _id: jobId,
-    });
-
     // Send email to recruiter about new job application
     jobEmail.sendNewJobApplicationEmailToRecruiter(jobId, jobApplication);
 
