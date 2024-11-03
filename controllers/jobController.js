@@ -1,4 +1,5 @@
 const Job = require("../models/Job");
+const SavedJob = require("../models/SavedJob");
 const JobApplication = require("../models/JobApplication");
 
 const listJobs = async (req, res) => {
@@ -82,8 +83,29 @@ const retrieveJob = async (req, res) => {
   }
 };
 
+const toggleSavedJob = async (req, res) => {
+  try {
+    const { jobId } = req.body;
+    const userId = req.user._id;
+
+    const alreadySaved = await SavedJob.findOne({ job: jobId, user: userId });
+
+    if (alreadySaved) {
+      await SavedJob.findByIdAndDelete(alreadySaved._id);
+      return res.status(200).json({ message: "Job unsaved" });
+    } else {
+      await SavedJob.create({ job: jobId, user: userId });
+      return res.status(200).json({ message: "Job saved" });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("An error occured");
+  }
+};
+
 module.exports = {
   createNewJob,
   listJobs,
   retrieveJob,
+  toggleSavedJob,
 };

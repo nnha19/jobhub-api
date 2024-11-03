@@ -11,4 +11,7 @@ router.get("", jobController.listJobs);
 router.get("/:jobId", jobController.retrieveJob);
 router.post("", isRecruiter, jobValidator, jobController.createNewJob);
 
+// Toggle Saved job status
+router.post("/saved", jobController.toggleSavedJob);
+
 module.exports = router;
