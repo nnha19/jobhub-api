@@ -1,6 +1,7 @@
 const Job = require("../models/Job");
 const SavedJob = require("../models/SavedJob");
 const JobApplication = require("../models/JobApplication");
+const { getFilteredJobs } = require("../services/jobService");
 
 const listJobs = async (req, res) => {
   try {
@@ -11,33 +12,22 @@ const listJobs = async (req, res) => {
       query: req.query.query,
     };
 
-    const searchCriteria = {};
-
-    if (jobFilters.jobType) searchCriteria.jobType = jobFilters.jobType;
-    if (jobFilters.employmentType)
-      searchCriteria.employmentType = jobFilters.employmentType;
-    if (jobFilters.postedDate)
-      searchCriteria.postedDate = { $gte: new Date(jobFilters.postedDate) };
-    if (jobFilters.query)
-      searchCriteria.title = { $regex: jobFilters.query, $options: "i" };
-
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
 
-    const startIndex = (page - 1) * limit;
-    const count = await Job.countDocuments(searchCriteria);
-
-    const filteredJobs = await Job.find(searchCriteria)
-      .sort({ postedDate: -1 })
-      .skip(startIndex)
-      .limit(limit);
+    const { jobsWithIsSavedAttr, count } = await getFilteredJobs(
+      jobFilters,
+      page,
+      limit,
+      req.user._id
+    );
 
     return res.status(200).json({
       page,
       limit,
       count,
       totalPages: Math.ceil(count / limit),
-      results: filteredJobs,
+      results: jobsWithIsSavedAttr,
     });
   } catch (err) {
     console.log(err);
@@ -76,6 +66,12 @@ const retrieveJob = async (req, res) => {
       currentUserApplication: currentUserApplication
         ? currentUserApplication._id
         : null,
+      isSaved: Boolean(
+        await SavedJob.findOne({
+          job: req.params.jobId,
+          user: req.user._id,
+        })
+      ),
     });
   } catch (err) {
     console.log(err);
